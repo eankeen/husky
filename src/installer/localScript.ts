@@ -1,6 +1,8 @@
-import fs = require('fs')
-import path = require('path')
-import { getBanner } from './getBanner'
+// import fs = require('fs')
+import * as denoFs from 'https://deno.land/std@0.50.0/fs/mod.ts'
+// import path = require('path')
+import * as denoPath from 'https://deno.land/std/path/mod.ts'
+import { getBanner } from './getBanner.ts'
 
 export function getLocalScript(
   pmName: string,
@@ -18,16 +20,23 @@ export function createLocalScript(
   pmName: string,
   relativeUserPkgDir: string
 ): void {
-  fs.writeFileSync(
-    path.join(gitHooksDir, 'husky.local.sh'),
-    getLocalScript(pmName, relativeUserPkgDir),
-    'utf-8'
+  // fs.writeFileSync(
+  //   path.join(gitHooksDir, 'husky.local.sh'),
+  //   getLocalScript(pmName, relativeUserPkgDir),
+  //   'utf-8'
+  // )
+  Deno.writeTextFileSync(
+    denoPath.join(gitHooksDir, 'husky.local.sh'),
+    getLocalScript(pmName, relativeUserPkgDir)
   )
 }
 
 export function removeLocalScript(gitHooksDir: string): void {
-  const filename = path.join(gitHooksDir, 'husky.local.sh')
-  if (fs.existsSync(filename)) {
-    fs.unlinkSync(filename)
+  // const filename = path.join(gitHooksDir, 'husky.local.sh')
+  const filename = denoPath.join(gitHooksDir, 'husky.local.sh')
+  // if (fs.existsSync(filename)) {
+  if (denoFs.existsSync(filename)) {
+    // fs.unlinkSync(filename)
+    Deno.removeSync(filename)
   }
 }

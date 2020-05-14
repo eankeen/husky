@@ -1,4 +1,4 @@
-import cp from 'child_process'
+// import cp from 'child_process'
 import slash from 'slash'
 
 export type GitRevParseResult = {
@@ -6,7 +6,9 @@ export type GitRevParseResult = {
   gitCommonDir: string
 }
 
-export function gitRevParse(cwd = process.cwd()): GitRevParseResult {
+// TODO(eankeen): do later
+// export function gitRevParse(cwd = process.cwd()): GitRevParseResult {
+export function gitRevParse(cwd = Deno.cwd()): GitRevParseResult {
   // https://github.com/typicode/husky/issues/580
   // https://github.com/typicode/husky/issues/587
   const { status, stderr, stdout } = cp.spawnSync(

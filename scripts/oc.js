@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-const fs = require('fs')
+// const fs = require('fs')
 
 function renderTier(tier, height) {
   const baseUrl = `https://opencollective.com/husky/tiers/${tier.toLowerCase()}-sponsor`
@@ -24,11 +24,16 @@ function render() {
     .join('\n\n')
 }
 
-const data = fs.readFileSync('README.md', 'utf-8')
+// const data = fs.readFileSync('README.md', 'utf-8')
+const data = Deno.readTextFileSync('README.md')
 const regex = /(<!-- oc -->)(.*)(<!-- oc-end -->)/s
 
-fs.writeFileSync(
+// fs.writeFileSync(
+//   'README.md',
+//   data.replace(regex, `$1\n${render()}\n$3`),
+//   'utf-8'
+// )
+Deno.writeTextFileSync(
   'README.md',
-  data.replace(regex, `$1\n${render()}\n$3`),
-  'utf-8'
+  data.replace(regex, `$1\n${render()}\n$3`)
 )

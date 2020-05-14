@@ -1,7 +1,10 @@
-import fs = require('fs')
-import path = require('path')
-import { isGhooks, isPreCommit, isHusky, isYorkie } from './is'
-import { getBanner } from './getBanner'
+// import fs = require('fs')
+import * as denoFs from 'https://deno.land/std@0.50.0/fs/mod.ts'
+// import path = require('path')
+import * as denoPath from 'https://deno.land/std@0.50.0/path/mod.ts'
+
+import { isGhooks, isPreCommit, isHusky, isYorkie } from './is.ts'
+import { getBanner } from './getBanner.ts'
 
 export const huskyIdentifier = '# husky'
 
@@ -37,13 +40,16 @@ const hookList = [
 
 function getHooks(gitHooksDir: string): string[] {
   return hookList.map((hookName: string): string =>
-    path.join(gitHooksDir, hookName)
+    // path.join(gitHooksDir, hookName)
+    denoPath.join(gitHooksDir, hookName)
   )
 }
 
 function writeHook(filename: string, script: string): void {
-  fs.writeFileSync(filename, script, 'utf-8')
-  fs.chmodSync(filename, 0o0755)
+  // fs.writeFileSync(filename, script, 'utf-8')
+  Deno.writeTextFileSync(filename, script)
+  // fs.chmodSync(filename, 0o0755)
+  Deno.chmodSync(filename, 0o0755)
 }
 
 function createHook(filename: string): void {
@@ -51,8 +57,10 @@ function createHook(filename: string): void {
   const hookScript = getHookScript()
 
   // Check if hook exist
-  if (fs.existsSync(filename)) {
-    const hook = fs.readFileSync(filename, 'utf-8')
+  // if (fs.existsSync(filename)) {
+  if (denoFs.existsSync(filename)) {
+    // const hook = fs.readFileSync(filename, 'utf-8')
+    const hook = Deno.readTextFileSync(filename)
 
     // Migrate
     if (isGhooks(hook)) {
@@ -85,8 +93,10 @@ export function createHooks(gitHooksDir: string): void {
 }
 
 function canRemove(filename: string): boolean {
-  if (fs.existsSync(filename)) {
-    const data = fs.readFileSync(filename, 'utf-8')
+  // if (fs.existsSync(filename)) {
+  if (denoFs.existsSync(filename)) {
+    // const data = fs.readFileSync(filename, 'utf-8')
+    const data = Deno.readTextFileSync(filename)
     return isHusky(data)
   }
 
@@ -94,7 +104,8 @@ function canRemove(filename: string): boolean {
 }
 
 function removeHook(filename: string): void {
-  fs.unlinkSync(filename)
+  // fs.unlinkSync(filename)
+  Deno.removeSync(filename)
 }
 
 export function removeHooks(gitHooksDir: string): void {

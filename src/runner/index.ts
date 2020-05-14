@@ -1,9 +1,14 @@
-import chalk from 'chalk'
+// import chalk from 'chalk'
 import { spawnSync } from 'child_process'
-import { getConf } from '../getConf'
-import { readPkg } from '../read-pkg'
+import { getConf } from '../getConf.ts'
+import { readPkg } from '../read-pkg.ts'
 
-export interface Env extends NodeJS.ProcessEnv {
+// export interface Env extends NodeJS.ProcessEnv {
+//   HUSKY_GIT_STDIN?: string
+//   HUSKY_GIT_PARAMS?: string
+// }
+
+export interface Env {
   HUSKY_GIT_STDIN?: string
   HUSKY_GIT_PARAMS?: string
 }
@@ -75,7 +80,8 @@ function runCommand(
  */
 export default async function run(
   [, , hookName = '', HUSKY_GIT_PARAMS]: string[],
-  { cwd = process.cwd() }: { cwd?: string } = {}
+  // { cwd = process.cwd() }: { cwd?: string } = {}
+  { cwd = Demo.cwd() }: { cwd?: string } = {}
 ): Promise<number> {
   const oldCommand = getOldCommand(cwd, hookName)
   const command = getCommand(cwd, hookName)
@@ -92,9 +98,20 @@ export default async function run(
   }
 
   if (oldCommand) {
-    console.log(
-      chalk.red(`
-Warning: Setting ${hookName} script in package.json > scripts will be deprecated.
+//     console.log(
+//       chalk.red(`
+// Warning: Setting ${hookName} script in package.json > scripts will be deprecated.
+// Please move it to husky.hooks in package.json or .huskyrc file.
+
+// For an automatic update you can also run:
+// npx --no-install husky-upgrade
+// yarn husky-upgrade
+
+// See https://github.com/typicode/husky for more information.
+// `)
+//     )
+      console.log(`
+WARNING: Setting ${hookName} script in package.json > scripts will be deprecated.
 Please move it to husky.hooks in package.json or .huskyrc file.
 
 For an automatic update you can also run:
@@ -103,7 +120,6 @@ yarn husky-upgrade
 
 See https://github.com/typicode/husky for more information.
 `)
-    )
     return runCommand(cwd, hookName, oldCommand, env)
   }
 

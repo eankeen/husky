@@ -1,10 +1,12 @@
-import fs from 'fs'
-import path from 'path'
-import { debug } from '../debug'
-import { getConf } from '../getConf'
-import { createHooks, removeHooks } from './hooks'
-import { createLocalScript, removeLocalScript } from './localScript'
-import { createMainScript, removeMainScript } from './mainScript'
+// import fs from 'fs'
+import * as denoFs from 'https://deno.land/std@0.50.0/fs/mod.ts'
+// import path from 'path'
+import * as denoPath from 'https://deno.land/std/path/mod.ts'
+import { debug } from '../debug.ts'
+import { getConf } from '../getConf.ts'
+import { createHooks, removeHooks } from './hooks.ts'
+import { createLocalScript, removeLocalScript } from './localScript.ts'
+import { createMainScript, removeMainScript } from './mainScript.ts'
 
 // This prevents the case where someone would want to debug a node_module that has
 // husky as devDependency and run npm install from node_modules directory
@@ -13,7 +15,8 @@ function isInNodeModules(dir: string): boolean {
 }
 
 function getGitHooksDir(gitDir: string): string {
-  return path.join(gitDir, 'hooks')
+  // return path.join(gitDir, 'hooks')
+  return denoPath.join(gitDir, 'hooks')
 }
 
 export function install({
@@ -47,8 +50,10 @@ export function install({
 
   // Create hooks directory if it doesn't exist
   const gitHooksDir = getGitHooksDir(absoluteGitCommonDir)
-  if (!fs.existsSync(gitHooksDir)) {
-    fs.mkdirSync(gitHooksDir)
+  // if (!fs.existsSync(gitHooksDir)) {
+  if (!denoFs.existsSync(gitHooksDir)) {
+    // fs.mkdirSync(gitHooksDir)
+    Deno.mkdirSync(gitHooksDir)
   }
 
   debug(`Installing hooks in ${gitHooksDir}`)
